@@ -3,6 +3,8 @@
 ## Project description
 This repository contains a reproducible Python workflow that explores relationships between physicochemical measurements and quality scores for Portuguese red Vinho Verde wines. The work includes data ingestion, documented cleaning, exploratory analysis, three visualizations, and a cited written report. It is designed as a clear starting point for later machine-learning and deep-learning work.
 
+**Public repository:** https://github.com/megrn/ai-programming-foundations-project
+
 ## What I built
 - `data_workflow.ipynb`: executed notebook with setup, ingestion, cleaning functions, EDA, visualizations, and interpretation.
 - `module_summary.pdf`: written summary with in-text citations and references.
