@@ -13,7 +13,10 @@ COLUMNS = ('fixed_acidity', 'volatile_acidity', 'citric_acid', 'residual_sugar',
 
 
 def audit(path, group_summary=False):
-    payload = Path(path).read_bytes()
+    return _audit_payload(Path(path).read_bytes(), group_summary)
+
+
+def _audit_payload(payload, group_summary=False):
     reader = csv.reader(io.StringIO(payload.decode('utf-8-sig')), delimiter=';')
     header = next(reader, [])
     normalized = [name.strip().lower().replace(' ', '_') for name in header]
@@ -59,11 +62,50 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('path', nargs='?', type=Path, default=Path(__file__).parent / 'winequality-red.csv')
     parser.add_argument('--group-summary', action='store_true', help='Compare descriptive alcohol summaries before/after deduplication')
+    parser.add_argument('--compare-with', type=Path, help='Check exact feature overlap against a second wine CSV split')
     args = parser.parse_args()
     try:
-        print(json.dumps(audit(args.path, args.group_summary), indent=2))
+        result = audit(args.path, args.group_summary)
+        if args.compare_with:
+            result['split_overlap'] = split_overlap(args.path, args.compare_with)
+            if result['source_sha256'] != result['split_overlap']['train_sha256']:
+                raise ValueError('Input changed between audit and split comparison')
+        print(json.dumps(result, indent=2))
     except (ValueError, OSError, UnicodeError) as error:
         parser.exit(2, f'Data audit failed: {error}\n')
+
+def split_overlap(train_path, test_path):
+    """Detect exact feature overlap even when a duplicate has another label.
+
+    Report aggregate counts only. Exact matching cannot establish statistical
+    independence or detect approximate/semantic duplicates.
+    """
+    payloads = [Path(path).read_bytes() for path in (train_path, test_path)]
+    snapshots = [_audit_payload(payload) for payload in payloads]
+    indexes = []
+    row_counts = []
+    full_rows = []
+    for payload in payloads:
+        reader = csv.reader(io.StringIO(payload.decode('utf-8-sig')), delimiter=';')
+        header = [name.strip().lower().replace(' ', '_') for name in next(reader)]
+        order = [header.index(name) for name in COLUMNS]
+        groups = {};counts = Counter();complete = set()
+        for row in reader:
+            values = tuple(float(row[index]) for index in order)
+            features, label = values[:-1], int(values[-1])
+            groups.setdefault(features, set()).add(label)
+            counts[features] += 1
+            complete.add(values)
+        indexes.append(groups);row_counts.append(counts);full_rows.append(complete)
+    shared = indexes[0].keys() & indexes[1].keys()
+    return {'status': 'potential_exact_feature_overlap' if shared else 'no_exact_feature_overlap',
+            'train_sha256': snapshots[0]['source_sha256'], 'test_sha256': snapshots[1]['source_sha256'],
+            'shared_unique_feature_vectors': len(shared),
+            'test_rows_with_training_features': sum(row_counts[1][key] for key in shared),
+            'shared_unique_full_rows': len(full_rows[0] & full_rows[1]),
+            'shared_feature_groups_with_conflicting_labels': sum(len(indexes[0][key] | indexes[1][key]) > 1 for key in shared),
+            'scope': 'Potential exact numerical feature leakage; the quality target is excluded from the feature identity. Shared features may be legitimate repeats. No raw rows exported, approximate-duplicate detection, or independence guarantee.'}
+
 
 if __name__ == '__main__':
     main()

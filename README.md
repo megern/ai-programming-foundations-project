@@ -1,5 +1,19 @@
 # AI Programming Foundations - Red Wine Quality Workflow
 
+## Check potential train/test feature leakage (local development)
+
+`wine-data-audit /absolute/train.csv --compare-with /absolute/test.csv` validates
+both snapshots and compares exact numeric feature vectors with the quality
+target excluded. It detects repeated features even when column order, numeric
+spelling or the target label differs. Output includes overlapping feature counts,
+affected test-row counts, full-row duplicates, conflicting labels and both exact
+snapshot hashes. Raw records are not exported.
+
+This is a diagnostic for the project's twelve-column wine schema. Repeated
+features may be legitimate observations; no exact overlap is not proof of
+independence. Approximate duplicates and semantic/data-collection overlap are
+outside this check.
+
 ## Public preview v0.2.0
 
 Python 3.11+; commands below use a local Mac/Linux shell. Source and reports are public; this is a research/development preview, not a production-security certification.
