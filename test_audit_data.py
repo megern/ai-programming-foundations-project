@@ -18,3 +18,7 @@ class DataAuditTests(unittest.TestCase):
             for payload in [';'.join(COLUMNS[:-1]+('alcohol',))+'\n',';'.join(COLUMNS)+'\n1;2\n']:
                 path.write_text(payload)
                 with self.assertRaises(ValueError):audit(path)
+    def test_deduplication_group_counts(self):
+        result=audit(Path(__file__).parent/'winequality-red.csv',True)['alcohol_by_quality']
+        self.assertEqual(sum(group['count'] for group in result['all_rows'].values()),1599)
+        self.assertEqual(sum(group['count'] for group in result['numeric_duplicates_removed'].values()),1359)

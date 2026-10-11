@@ -1,0 +1,83 @@
+{
+  "status": "passed",
+  "source_sha256": "4a402cf041b025d4566d954c3b9ba8635a3a8a01e039005d97d6a710278cf05e",
+  "rows": 1599,
+  "unique_numeric_rows": 1359,
+  "duplicate_rows": 240,
+  "quality_distribution": {
+    "3": 10,
+    "4": 53,
+    "5": 681,
+    "6": 638,
+    "7": 199,
+    "8": 18
+  },
+  "scope": "Snapshot validation; duplicates are numeric row equality. No population representativeness or causal claim.",
+  "alcohol_by_quality": {
+    "all_rows": {
+      "3": {
+        "count": 10,
+        "mean_alcohol": 9.955,
+        "sample_sd_alcohol": 0.8180091007372037
+      },
+      "4": {
+        "count": 53,
+        "mean_alcohol": 10.265094339622642,
+        "sample_sd_alcohol": 0.9347760378448319
+      },
+      "5": {
+        "count": 681,
+        "mean_alcohol": 9.89970631424376,
+        "sample_sd_alcohol": 0.7365209765620759
+      },
+      "6": {
+        "count": 638,
+        "mean_alcohol": 10.629519331243468,
+        "sample_sd_alcohol": 1.0496389512697766
+      },
+      "7": {
+        "count": 199,
+        "mean_alcohol": 11.465912897822445,
+        "sample_sd_alcohol": 0.9619329943029578
+      },
+      "8": {
+        "count": 18,
+        "mean_alcohol": 12.094444444444445,
+        "sample_sd_alcohol": 1.224010871838598
+      }
+    },
+    "numeric_duplicates_removed": {
+      "3": {
+        "count": 10,
+        "mean_alcohol": 9.955,
+        "sample_sd_alcohol": 0.8180091007372037
+      },
+      "4": {
+        "count": 53,
+        "mean_alcohol": 10.265094339622642,
+        "sample_sd_alcohol": 0.9347760378448319
+      },
+      "5": {
+        "count": 577,
+        "mean_alcohol": 9.888561525129983,
+        "sample_sd_alcohol": 0.7499299806040435
+      },
+      "6": {
+        "count": 535,
+        "mean_alcohol": 10.658878504672897,
+        "sample_sd_alcohol": 1.0549329207665028
+      },
+      "7": {
+        "count": 167,
+        "mean_alcohol": 11.491117764471058,
+        "sample_sd_alcohol": 0.9707792044670935
+      },
+      "8": {
+        "count": 17,
+        "mean_alcohol": 12.158823529411764,
+        "sample_sd_alcohol": 1.2298672812184916
+      }
+    },
+    "scope": "Descriptive group statistics before/after duplicate removal; no causal or predictive inference."
+  }
+}

@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wine-data-audit"
+version = "0.2.0"
+description = "Wine-quality snapshot validation"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/megern/ai-programming-foundations-project"
+Issues = "https://github.com/megern/ai-programming-foundations-project/issues"
+
+[project.scripts]
+wine-data-audit = "audit_data:main"
+
+[tool.setuptools]
+py-modules = ["audit_data"]
+

@@ -1,5 +1,20 @@
 # AI Programming Foundations - Red Wine Quality Workflow
 
+## Public preview v0.2.0
+
+Python 3.11+; commands below use a local Mac/Linux shell. Source and reports are public; this is a research/development preview, not a production-security certification.
+
+```sh
+git clone --branch v0.2.0 https://github.com/megern/ai-programming-foundations-project.git
+cd ai-programming-foundations-project
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install .
+wine-data-audit --help
+```
+
+The installed entry point was exercised outside the checkout in a separate local environment. This revision has 4 passing local tests. No hosted CI or cloud compute is used. Report an issue with the command, Python/OS versions, sanitized input and expected/actual behavior; remove credentials and private records first. Benchmarks describe the supplied fixtures and hardware.
+
 ## Project description
 This repository contains a reproducible Python workflow that explores relationships between physicochemical measurements and quality scores for Portuguese red Vinho Verde wines. The work includes data ingestion, documented cleaning, exploratory analysis, three visualizations, and a cited written report. It is designed as a clear starting point for later machine-learning and deep-learning work.
 
@@ -15,7 +30,7 @@ This repository contains a reproducible Python workflow that explores relationsh
 **Wine Quality - Red Vinho Verde** from the [UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/186/wine+quality). The red-wine file has 1,599 observations and 12 columns before duplicate removal. It contains physicochemical tests and a sensory quality score.
 
 ## How to run
-1. Create and activate a Python 3.9+ virtual environment.
+1. Create and activate a Python 3.11+ virtual environment.
 2. Install dependencies:
    ```bash
    pip install -r requirements.txt
@@ -45,3 +60,12 @@ python3 -m unittest discover -s .
 The standard-library audit validates twelve distinct normalized columns, row widths, finite nonnegative numbers and integer quality scores in [0, 10]. It reports the exact CSV SHA-256, quality distribution and numeric duplicate counts without including raw rows. The bundled snapshot has 1,599 rows, 1,359 unique numeric rows and 240 duplicates; see `results/data-audit.json`. The artifact builder now validates inputs before analysis.
 
 Saved notebook outputs are generated from computed tables and figures by the builder; it does not execute a notebook kernel. Run the notebook from top to bottom to independently reproduce the analysis. Snapshot validation does not establish population representativeness or causal conclusions.
+
+
+### Descriptive group sensitivity
+
+```sh
+wine-data-audit winequality-red.csv --group-summary
+```
+
+`--group-summary` reports alcohol mean, sample standard deviation and sample counts for each quality group, before and after numeric duplicate removal. Small groups remain visible; singleton sample SD is null. See `results/group-summary-20261011.json`. These descriptive statistics are not causal effects, predictive model performance or confidence intervals. The lightweight installed command requires an explicit CSV path; analysis/notebook dependencies remain in `requirements.txt`.

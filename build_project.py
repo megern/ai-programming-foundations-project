@@ -240,7 +240,9 @@ def build_notebook(raw: pd.DataFrame, cleaned: pd.DataFrame, figures: list[Path]
 
 
 def build_readme() -> None:
-    """Write concise instructions and required reflections for reviewers."""
+    """Create initial instructions only; preserve maintained release documentation."""
+    if (ROOT / "README.md").exists():
+        return
     (ROOT / "README.md").write_text("""# AI Programming Foundations - Red Wine Quality Workflow
 
 ## Project description
@@ -256,7 +258,7 @@ This repository contains a reproducible Python workflow that explores relationsh
 **Wine Quality - Red Vinho Verde** from the [UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/186/wine+quality). The red-wine file has 1,599 observations and 12 columns before duplicate removal. It contains physicochemical tests and a sensory quality score.
 
 ## How to run
-1. Create and activate a Python 3.9+ virtual environment.
+1. Create and activate a Python 3.11+ virtual environment.
 2. Install dependencies:
    ```bash
    pip install -r requirements.txt
@@ -331,8 +333,9 @@ def main() -> None:
     figures = create_figures(cleaned)
     build_notebook(raw, cleaned, figures)
     build_readme()
-    with (ROOT / "README.md").open("a") as readme:
-        readme.write("\n\n## Validate the input snapshot\n\nRun `python3 audit_data.py` before analysis; see `results/data-audit.json`. The builder validates schema, numeric values and quality scores. Notebook outputs are precomputed by the builder, not kernel-executed.\n")
+    if "audit_data.py" not in (ROOT / "README.md").read_text():
+        with (ROOT / "README.md").open("a") as readme:
+            readme.write("\n\n## Validate the input snapshot\n\nRun `python3 audit_data.py` before analysis; see `results/data-audit.json`. The builder validates schema, numeric values and quality scores. Notebook outputs are precomputed by the builder, not kernel-executed.\n")
     build_pdf(raw, cleaned, figures)
     print(f"Raw rows: {len(raw)}; cleaned rows: {len(cleaned)}")
     print("Created notebook, README, figures, and PDF report.")
