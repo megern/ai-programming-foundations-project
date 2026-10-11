@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "source_sha256": "4a402cf041b025d4566d954c3b9ba8635a3a8a01e039005d97d6a710278cf05e",
+  "rows": 1599,
+  "unique_numeric_rows": 1359,
+  "duplicate_rows": 240,
+  "quality_distribution": {
+    "3": 10,
+    "4": 53,
+    "5": 681,
+    "6": 638,
+    "7": 199,
+    "8": 18
+  },
+  "scope": "Snapshot validation; duplicates are numeric row equality. No population representativeness or causal claim."
+}

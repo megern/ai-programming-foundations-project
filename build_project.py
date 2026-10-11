@@ -116,7 +116,7 @@ def png_output(path: Path):
 
 
 def build_notebook(raw: pd.DataFrame, cleaned: pd.DataFrame, figures: list[Path]) -> None:
-    """Create a fully executed notebook with visible tables and figures."""
+    """Create a fully notebook with saved computed outputs, visible tables and figures."""
     numeric_summary, quality_summary, correlations = exploratory_summary(cleaned)
     nb = nbf.v4.new_notebook()
     cells = []
@@ -247,7 +247,7 @@ def build_readme() -> None:
 This repository contains a reproducible Python workflow that explores relationships between physicochemical measurements and quality scores for Portuguese red Vinho Verde wines. The work includes data ingestion, documented cleaning, exploratory analysis, three visualizations, and a cited written report. It is designed as a clear starting point for later machine-learning and deep-learning work.
 
 ## What I built
-- `data_workflow.ipynb`: executed notebook with setup, ingestion, cleaning functions, EDA, visualizations, and interpretation.
+- `data_workflow.ipynb`: notebook with saved computed outputs, setup, ingestion, cleaning functions, EDA, visualizations, and interpretation.
 - `module_summary.pdf`: written summary with in-text citations and references.
 - `winequality-red.csv`: project dataset.
 - `figures/`: saved figures used in the notebook and report.
@@ -324,11 +324,15 @@ def build_pdf(raw: pd.DataFrame, cleaned: pd.DataFrame, figures: list[Path]) -> 
 
 
 def main() -> None:
+    from audit_data import audit
+    audit(DATA_FILE)
     raw = pd.read_csv(DATA_FILE, sep=";")
     cleaned = remove_duplicate_rows(standardize_columns(raw))
     figures = create_figures(cleaned)
     build_notebook(raw, cleaned, figures)
     build_readme()
+    with (ROOT / "README.md").open("a") as readme:
+        readme.write("\n\n## Validate the input snapshot\n\nRun `python3 audit_data.py` before analysis; see `results/data-audit.json`. The builder validates schema, numeric values and quality scores. Notebook outputs are precomputed by the builder, not kernel-executed.\n")
     build_pdf(raw, cleaned, figures)
     print(f"Raw rows: {len(raw)}; cleaned rows: {len(cleaned)}")
     print("Created notebook, README, figures, and PDF report.")

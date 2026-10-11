@@ -3,10 +3,10 @@
 ## Project description
 This repository contains a reproducible Python workflow that explores relationships between physicochemical measurements and quality scores for Portuguese red Vinho Verde wines. The work includes data ingestion, documented cleaning, exploratory analysis, three visualizations, and a cited written report. It is designed as a clear starting point for later machine-learning and deep-learning work.
 
-**Public repository:** https://github.com/megrn/ai-programming-foundations-project
+**Public repository:** https://github.com/megern/ai-programming-foundations-project
 
 ## What I built
-- `data_workflow.ipynb`: executed notebook with setup, ingestion, cleaning functions, EDA, visualizations, and interpretation.
+- `data_workflow.ipynb`: notebook with saved computed outputs, setup, ingestion, cleaning functions, EDA, visualizations, and interpretation.
 - `module_summary.pdf`: written summary with in-text citations and references.
 - `winequality-red.csv`: project dataset.
 - `figures/`: saved figures used in the notebook and report.
@@ -34,3 +34,14 @@ The workflow standardizes column names and removes exact duplicates. Keeping dup
 **Neural-network preparation:** Numeric features would be standardized using training-set statistics only. The ordinal quality target would be modeled either as regression or an ordinal classification task, while class imbalance would be measured before selecting a loss function.
 
 **Agentic automation potential:** An agent could validate incoming columns and ranges, run this notebook's quality checks, refresh figures, compare new summary statistics against a reference dataset, and open a human-review task when data drift or unexpected duplicates appear.
+
+## Validate the dataset snapshot
+
+```sh
+python3 audit_data.py
+python3 -m unittest discover -s .
+```
+
+The standard-library audit validates twelve distinct normalized columns, row widths, finite nonnegative numbers and integer quality scores in [0, 10]. It reports the exact CSV SHA-256, quality distribution and numeric duplicate counts without including raw rows. The bundled snapshot has 1,599 rows, 1,359 unique numeric rows and 240 duplicates; see `results/data-audit.json`. The artifact builder now validates inputs before analysis.
+
+Saved notebook outputs are generated from computed tables and figures by the builder; it does not execute a notebook kernel. Run the notebook from top to bottom to independently reproduce the analysis. Snapshot validation does not establish population representativeness or causal conclusions.
