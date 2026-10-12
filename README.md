@@ -1,5 +1,11 @@
 # AI Programming Foundations - Red Wine Quality Workflow
 
+## Version 1.0.0
+
+End-to-end grouped regression workflow. Groups identical feature vectors before 60/20/20 train/validation/test splitting; deduplicates complete numeric rows; fits scaling only on training; chooses ridge alpha from a fixed four-value set using validation; scores test after selection against a training-mean baseline. Saves coefficients, scaling, split hashes and metrics. predict(model, features) is the inference API. Standard library only. Dataset snapshots and descriptive fixed-split results are not independent population-generalization evidence.
+
+See the [complete local workflow](docs/v1-workflow.md) for installation, commands, review artifacts and limits. Earlier preview notes below describe their historical tagged revisions.
+
 ## Check potential train/test feature leakage (local development)
 
 `wine-data-audit /absolute/train.csv --compare-with /absolute/test.csv` validates
